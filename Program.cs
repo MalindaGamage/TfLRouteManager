@@ -7,23 +7,52 @@ namespace TfLRouteManager
     {
         static void Main(string[] args)
         {
-            TfLNetwork network = new TfLNetwork();
+            var network = new TfLNetwork();
             network.InitializeNetwork();
             DelayManager delayManager = new DelayManager(network);
             TrackManager trackManager = new TrackManager(network);
             Printer printer = new Printer(network);
-            RouteFinder routeFinder = new RouteFinder(network);
+            var routeFinder = new RouteFinder(network);
 
             while (true)
             {
+                Console.WriteLine("Select Mode:");
+                Console.WriteLine("1. Engineer Operations");
+                Console.WriteLine("2. Customer Operations");
+                Console.WriteLine("3. Exit");
+                int mode = int.Parse(Console.ReadLine());
+
+                if (mode == 3)
+                {
+                    break;
+                }
+                else if (mode == 1)
+                {
+                    HandleEngineerOperations(delayManager, trackManager, printer);
+                }
+                else if (mode == 2)
+                {
+                    HandleCustomerOperations(routeFinder);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid mode. Please enter 1, 2, or 3.");
+                }
+            }
+        }
+
+        private static void HandleEngineerOperations(DelayManager delayManager, TrackManager trackManager, Printer printer)
+        {
+            while (true)
+            {
+                Console.WriteLine("Engineer Operations:");
                 Console.WriteLine("1. Add Delay");
                 Console.WriteLine("2. Remove Delay");
                 Console.WriteLine("3. Close Track");
                 Console.WriteLine("4. Open Track");
                 Console.WriteLine("5. Print Closed Tracks");
                 Console.WriteLine("6. Print Delayed Tracks");
-                Console.WriteLine("7. Find Fastest Route");
-                Console.WriteLine("8. Exit");
+                Console.WriteLine("7. Back to Main Menu");
 
                 int choice = int.Parse(Console.ReadLine());
 
@@ -48,12 +77,33 @@ namespace TfLRouteManager
                         HandlePrintDelayedTracks(printer);
                         break;
                     case 7:
-                        HandleFindFastestRoute(routeFinder);
-                        break;
-                    case 8:
                         return;
                     default:
-                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 8.");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 7.");
+                        break;
+                }
+            }
+        }
+
+        private static void HandleCustomerOperations(RouteFinder routeFinder)
+        {
+            while (true)
+            {
+                Console.WriteLine("Customer Operations:");
+                Console.WriteLine("1. Find Fastest Route");
+                Console.WriteLine("2. Back to Main Menu");
+
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        HandleFindFastestRoute(routeFinder);
+                        break;
+                    case 2:
+                        return;
+                    default:
+                        Console.WriteLine("Invalid choice. Please enter 1 or 2.");
                         break;
                 }
             }
