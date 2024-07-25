@@ -46,7 +46,8 @@ namespace TfLRouteManager.Services
                 ("Gloucester Road", 1.5, "Outer"),
                 ("High Street Kensington", 2.0, "Outer"),
                 ("Notting Hill Gate", 2.0, "Outer"),
-                ("Bayswater", 1.5, "Outer")
+                ("Bayswater", 1.5, "Outer"),
+                ("Oxford Circus", 1.5, "Outer")
             });
 
             // Jubilee line stations
@@ -124,8 +125,8 @@ namespace TfLRouteManager.Services
                 ("Gospel Oak", 2.5, "Eastbound"),
                 ("Kentish Town West", 2.5, "Eastbound"),
                 ("Camden Road", 2.5, "Eastbound"),
-                ("Caledonian Road & Barnsbury", 2.5, "Eastbound"),
                 ("Highbury & Islington", 2.5, "Eastbound"),
+                ("Caledonian Road & Barnsbury", 2.5, "Eastbound"),
                 ("Canonbury", 2.5, "Eastbound"),
                 ("Dalston Junction", 2.5, "Eastbound"),
                 ("Haggerston", 2.5, "Eastbound"),
@@ -137,15 +138,22 @@ namespace TfLRouteManager.Services
                 ("Rotherhithe", 2.5, "Eastbound"),
                 ("Canada Water", 2.5, "Eastbound"),
                 ("Surrey Quays", 2.5, "Eastbound"),
-                ("New Cross", 2.5, "Eastbound")
+                ("New Cross", 2.5, "Eastbound"),
+                ("Euston", 2.5, "Eastbound"),
+                ("Stratford", 2.5, "Eastbound"),
             });
 
             // Initialize interchanges
             AddInterchange("Baker Street", jubileeLine.Stations[13], circleLine.Stations[1], 2.0, "Westbound", "Outer");
             AddInterchange("Victoria", victoriaLine.Stations[12], circleLine.Stations[21], 2.0, "Southbound", "Outer");
             AddInterchange("Oxford Circus", victoriaLine.Stations[9], circleLine.Stations[15], 2.0, "Southbound", "Outer");
+            AddInterchange("King's Cross St. Pancras", victoriaLine.Stations[6], circleLine.Stations[4], 2.0, "Southbound", "Outer");
+            AddInterchange("Euston", victoriaLine.Stations[7], overgroundLine.Stations[30], 2.0, "Southbound", "Outer");
+            AddInterchange("Highbury & Islington", victoriaLine.Stations[5], overgroundLine.Stations[16], 2.0, "Southbound", "Eastbound");
+            AddInterchange("Stratford", jubileeLine.Stations[26], overgroundLine.Stations[31], 2.0, "Southbound", "Eastbound");
 
-            // Adding Marble Arch and its connections
+
+            /*// Adding Marble Arch and its connections
             var marbleArch = new Station { Name = "Marble Arch" };
             AddStation(marbleArch);
 
@@ -177,7 +185,7 @@ namespace TfLRouteManager.Services
 
             // Add direct connections for testing
             AddConnection("Baker Street", "Victoria", 5.0, "Southbound");
-            AddConnection("Bond Street", "Baker Street", 2.0, "Eastbound");
+            AddConnection("Bond Street", "Baker Street", 2.0, "Eastbound");*/
         }
         private void AddStationsAndConnections(Line line, (string, double, string)[] stations)
         {
