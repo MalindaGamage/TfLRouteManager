@@ -13,6 +13,7 @@
 
         private int Hash(string key)
         {
+            // A simple hash function that ensures the hash value fits within the table size
             int hash = 0;
             foreach (var c in key)
             {
@@ -34,6 +35,7 @@
         public Station Get(string key)
         {
             int index = Hash(key);
+            int startIndex = index;
             while (_stations[index] != null)
             {
                 if (_stations[index].Name == key)
@@ -41,6 +43,10 @@
                     return _stations[index];
                 }
                 index = (index + 1) % _size;
+                if (index == startIndex) // We looped back to the start
+                {
+                    break;
+                }
             }
             return null;
         }

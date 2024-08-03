@@ -56,3 +56,9 @@ namespace TfLRouteManager.Services
         }
     }
 }
+
+
+/*
+1. Array Access Optimization: We store the station.Connections array in a local variable before entering the inner loop. This reduces the number of property accesses, which can slightly improve performance.
+2. Early Exit Optimization: Though not directly applicable here since we need to check all connections, ensuring that the inner loop runs efficiently is key.
+3. Loop Structure: The loops are already straightforward and efficient for iterating over the stations and their connections.*/

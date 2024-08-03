@@ -20,7 +20,12 @@ namespace TfLRouteManager
                 Console.WriteLine("1. Engineer Operations");
                 Console.WriteLine("2. Customer Operations");
                 Console.WriteLine("3. Exit");
-                int mode = int.Parse(Console.ReadLine());
+
+                if (!int.TryParse(Console.ReadLine(), out int mode) || mode < 1 || mode > 3)
+                {
+                    Console.WriteLine("Invalid mode. Please enter 1, 2, or 3.");
+                    continue;
+                }
 
                 if (mode == 3)
                 {
@@ -33,10 +38,6 @@ namespace TfLRouteManager
                 else if (mode == 2)
                 {
                     HandleCustomerOperations(routeFinder);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid mode. Please enter 1, 2, or 3.");
                 }
             }
         }
@@ -54,7 +55,11 @@ namespace TfLRouteManager
                 Console.WriteLine("6. Print Delayed Tracks");
                 Console.WriteLine("7. Back to Main Menu");
 
-                int choice = int.Parse(Console.ReadLine());
+                if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 7)
+                {
+                    Console.WriteLine("Invalid choice. Please enter a number between 1 and 7.");
+                    continue;
+                }
 
                 switch (choice)
                 {
@@ -78,9 +83,6 @@ namespace TfLRouteManager
                         break;
                     case 7:
                         return;
-                    default:
-                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 7.");
-                        break;
                 }
             }
         }
@@ -93,7 +95,11 @@ namespace TfLRouteManager
                 Console.WriteLine("1. Find Fastest Route");
                 Console.WriteLine("2. Back to Main Menu");
 
-                int choice = int.Parse(Console.ReadLine());
+                if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 2)
+                {
+                    Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+                    continue;
+                }
 
                 switch (choice)
                 {
@@ -102,9 +108,6 @@ namespace TfLRouteManager
                         break;
                     case 2:
                         return;
-                    default:
-                        Console.WriteLine("Invalid choice. Please enter 1 or 2.");
-                        break;
                 }
             }
         }
@@ -116,7 +119,12 @@ namespace TfLRouteManager
             Console.WriteLine("Enter to station:");
             string toStation = Console.ReadLine();
             Console.WriteLine("Enter delay (in minutes):");
-            double delay = double.Parse(Console.ReadLine());
+
+            if (!double.TryParse(Console.ReadLine(), out double delay) || delay <= 0)
+            {
+                Console.WriteLine("Invalid delay. Please enter a positive number.");
+                return;
+            }
 
             delayManager.AddDelay(fromStation, toStation, delay);
         }

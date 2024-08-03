@@ -36,7 +36,7 @@ namespace TfLRouteManager.Services
             {
                 var station = _network.Stations[i];
                 distances[i] = station == from ? 0 : double.PositiveInfinity;
-                nodes[nodeCount++] = station;
+                nodes[nodeCount++] = station; //i
             }
 
             while (nodeCount != 0)
