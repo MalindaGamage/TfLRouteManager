@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using TfLRouteManager.Models;
 
@@ -27,66 +26,71 @@ namespace TfLRouteManager.Services
 
             var previous = new Station[_network.Stations.Length];
             var distances = new double[_network.Stations.Length];
-            var nodes = new Station[_network.StationCount];
-            var previousLine = new Line[_network.Stations.Length];
-            bool[] visited = new bool[_network.Stations.Length];
+            var visited = new bool[_network.Stations.Length];
+            var stationIndexes = new int[_network.Stations.Length];
             int nodeCount = 0;
 
-            for (int i = 0; i < _network.StationCount; i++)
+            for (int i = 0; i < _network.Stations.Length; i++)
             {
                 var station = _network.Stations[i];
                 distances[i] = station == from ? 0 : double.PositiveInfinity;
-                nodes[nodeCount++] = station; //i
+                stationIndexes[i] = i;
+                nodeCount++;
             }
 
             while (nodeCount != 0)
             {
-                // Find the smallest distance node
-                int smallestIndex = 0;
-                for (int i = 1; i < nodeCount; i++)
+                int smallestIndex = -1;
+                for (int i = 0; i < _network.Stations.Length; i++)
                 {
-                    if (distances[Array.IndexOf(_network.Stations, nodes[i])] < distances[Array.IndexOf(_network.Stations, nodes[smallestIndex])])
+                    if (!visited[i] && (smallestIndex == -1 || distances[i] < distances[smallestIndex]))
                     {
                         smallestIndex = i;
                     }
                 }
 
-                var smallest = nodes[smallestIndex];
-                nodes[smallestIndex] = nodes[--nodeCount];
-
-                int smallestIndexInStations = Array.IndexOf(_network.Stations, smallest);
-                if (smallestIndexInStations < 0 || smallestIndexInStations >= _network.Stations.Length)
+                if (smallestIndex == -1 || distances[smallestIndex] == double.PositiveInfinity)
                 {
-                    continue;
+                    break;
                 }
 
-                visited[smallestIndexInStations] = true;
+                var smallest = _network.Stations[smallestIndex];
+                visited[smallestIndex] = true;
+                nodeCount--;
 
                 if (smallest == to)
                 {
-                    var path = new List<string>();
-                    var directions = new List<string>();
+                    var path = new string[_network.Stations.Length];
+                    var directions = new string[_network.Stations.Length];
+                    int pathCount = 0;
 
-                    while (previous[smallestIndexInStations] != null)
+                    while (previous[smallestIndex] != null)
                     {
-                        path.Add(smallest.Name);
-                        var previousStation = previous[smallestIndexInStations];
+                        path[pathCount] = smallest.Name;
+                        var previousStation = previous[smallestIndex];
                         var connection = _network.FindConnection(previousStation, smallest);
 
                         if (connection != null)
                         {
-                            directions.Add($"{connection.Line.Name}({connection.Direction}): {previousStation.Name} to {smallest.Name}: {connection.DelayedTime} min");
+                            directions[pathCount] = $"{connection.Line.Name}({connection.Direction}): {previousStation.Name} to {smallest.Name}: {connection.DelayedTime} min";
                         }
 
                         smallest = previousStation;
-                        smallestIndexInStations = Array.IndexOf(_network.Stations, smallest);
+                        smallestIndex = Array.IndexOf(_network.Stations, smallest);
+                        pathCount++;
                     }
 
-                    path.Add(startStation);
-                    path.Reverse();
-                    directions.Reverse();
+                    path[pathCount] = startStation;
 
-                    return (path.ToArray(), directions.ToArray());
+                    Array.Reverse(path, 0, pathCount + 1);
+                    Array.Reverse(directions, 0, pathCount);
+
+                    string[] finalPath = new string[pathCount + 1];
+                    string[] finalDirections = new string[pathCount];
+                    Array.Copy(path, finalPath, pathCount + 1);
+                    Array.Copy(directions, finalDirections, pathCount);
+
+                    return (finalPath, finalDirections);
                 }
 
                 for (int i = 0; i < smallest.ConnectionCount; i++)
@@ -97,19 +101,17 @@ namespace TfLRouteManager.Services
                     int neighborIndex = Array.IndexOf(_network.Stations, neighbor.To);
                     if (neighborIndex < 0 || visited[neighborIndex]) continue;
 
-                    var alt = distances[smallestIndexInStations] + neighbor.DelayedTime;
+                    var alt = distances[smallestIndex] + neighbor.DelayedTime;
                     if (alt < distances[neighborIndex])
                     {
                         distances[neighborIndex] = alt;
                         previous[neighborIndex] = smallest;
-                        previousLine[neighborIndex] = neighbor.Line;
                     }
                 }
             }
 
             return (new string[0], new string[0]); // No path found
         }
-
 
         public string GenerateRouteDescription(string[] route, string[] directions)
         {

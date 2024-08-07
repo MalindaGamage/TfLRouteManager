@@ -8,7 +8,7 @@ namespace TfLRouteManager
         static void Main(string[] args)
         {
             var network = new TfLNetwork();
-            network.InitializeNetwork();
+                network.InitializeNetwork();
             DelayManager delayManager = new DelayManager(network);
             TrackManager trackManager = new TrackManager(network);
             Printer printer = new Printer(network);
