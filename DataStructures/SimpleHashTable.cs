@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using TfLRouteManager.Models;
+﻿using TfLRouteManager.Models;
 
 public class SimpleHashTable
 {
-    private LinkedList<KeyValuePair<string, Station>>[] _buckets;
+    private KeyValuePair[] _buckets;
     private int _count;
     private const double LoadFactorThreshold = 0.75;
 
     public SimpleHashTable(int initialSize)
     {
-        _buckets = new LinkedList<KeyValuePair<string, Station>>[initialSize];
+        _buckets = new KeyValuePair[initialSize];
         _count = 0;
     }
 
@@ -21,68 +20,56 @@ public class SimpleHashTable
         }
 
         int index = GetIndex(key, _buckets.Length);
+
+        // Handle collisions by linear probing
+        while (_buckets[index] != null && _buckets[index].Key != key)
+        {
+            index = (index + 1) % _buckets.Length;
+        }
+
         if (_buckets[index] == null)
         {
-            _buckets[index] = new LinkedList<KeyValuePair<string, Station>>();
+            _count++;
         }
 
-        // Check if the key already exists and update the value
-        var bucket = _buckets[index];
-        var existingKvp = default(KeyValuePair<string, Station>?);
-
-        foreach (var kvp in bucket)
-        {
-            if (kvp.Key == key)
-            {
-                existingKvp = kvp;
-                break;
-            }
-        }
-
-        if (existingKvp.HasValue)
-        {
-            bucket.Remove(existingKvp.Value);
-            _count--; // Decrease count before adding the updated key-value pair
-        }
-
-        bucket.AddLast(new KeyValuePair<string, Station>(key, value));
-        _count++;
+        _buckets[index] = new KeyValuePair(key, value);
     }
 
     public Station Get(string key)
     {
         int index = GetIndex(key, _buckets.Length);
-        if (_buckets[index] != null)
+
+        // Handle collisions by linear probing
+        while (_buckets[index] != null)
         {
-            foreach (var kvp in _buckets[index])
+            if (_buckets[index].Key == key)
             {
-                if (kvp.Key == key)
-                {
-                    return kvp.Value;
-                }
+                return _buckets[index].Value;
             }
+            index = (index + 1) % _buckets.Length;
         }
+
         return null;
     }
 
     private void Resize()
     {
         int newSize = _buckets.Length * 2;
-        var newBuckets = new LinkedList<KeyValuePair<string, Station>>[newSize];
+        var newBuckets = new KeyValuePair[newSize];
 
-        foreach (var bucket in _buckets)
+        foreach (var pair in _buckets)
         {
-            if (bucket != null)
+            if (pair != null)
             {
-                foreach (var kvp in bucket)
+                int newIndex = GetIndex(pair.Key, newSize);
+
+                // Handle collisions by linear probing
+                while (newBuckets[newIndex] != null)
                 {
-                    int newIndex = GetIndex(kvp.Key, newSize);
-                    if (newBuckets[newIndex] == null)
-                    {
-                        newBuckets[newIndex] = new LinkedList<KeyValuePair<string, Station>>();
-                    }
-                    newBuckets[newIndex].AddLast(kvp);
+                    newIndex = (newIndex + 1) % newSize;
                 }
+
+                newBuckets[newIndex] = pair;
             }
         }
 
@@ -93,5 +80,17 @@ public class SimpleHashTable
     {
         int hash = key.GetHashCode();
         return (hash & 0x7FFFFFFF) % arrayLength;
+    }
+
+    private class KeyValuePair
+    {
+        public string Key { get; }
+        public Station Value { get; }
+
+        public KeyValuePair(string key, Station value)
+        {
+            Key = key;
+            Value = value;
+        }
     }
 }
