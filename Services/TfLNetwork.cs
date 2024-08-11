@@ -341,14 +341,47 @@ namespace TfLRouteManager.Services
                 ("Richmond", 0.0, "Northbound")
             });
 
-            // Initialize interchanges based on specific known interchanges in the data
+            // Initialize interchanges based on the CSV data
+
+            // Interchange at Baker Street between Bakerloo and Circle lines
             AddInterchange("Baker Street", bakerlooLine.Stations[0], circleLine.Stations[13], 2.0, "Southbound", "Outer");
+
+            // Interchange at Victoria between Victoria and Circle lines
             AddInterchange("Victoria", victoriaLine.Stations[11], circleLine.Stations[8], 2.0, "Southbound", "Inner");
+
+            // Interchange at Oxford Circus between Victoria and Bakerloo lines
             AddInterchange("Oxford Circus", victoriaLine.Stations[8], bakerlooLine.Stations[2], 2.0, "Southbound", "Southbound");
+
+            // Interchange at Kings Cross St Pancras between Victoria and Circle lines
             AddInterchange("Kings Cross St Pancras", victoriaLine.Stations[6], circleLine.Stations[21], 2.0, "Southbound", "Inner");
+
+            // Interchange at Euston between Northern and Victoria lines
             AddInterchange("Euston", northernLine.Stations[0], victoriaLine.Stations[7], 2.0, "Southbound", "Southbound");
+
+            // Interchange at Highbury between Victoria and North Overground lines
             AddInterchange("Highbury", victoriaLine.Stations[5], northOvergroundLine.Stations[2], 2.0, "Southbound", "Southbound");
+
+            // Interchange at Stratford between Jubilee and North Overground lines
             AddInterchange("Stratford", jubileeLine.Stations[26], northOvergroundLine.Stations[3], 2.0, "Eastbound", "Eastbound");
+
+            // Additional interchanges based on common intersections from the CSV file data
+
+            // Interchange at Piccadilly Circus between Bakerloo and Piccadilly lines
+            AddInterchange("Piccadilly Circus", bakerlooLine.Stations[3], piccadillyLine.Stations[7], 2.0, "Southbound", "Eastbound");
+
+            // Interchange at Green Park between Victoria, Jubilee, and Piccadilly lines
+            AddInterchange("Green Park", victoriaLine.Stations[9], jubileeLine.Stations[15], 2.0, "Southbound", "Eastbound");
+            AddInterchange("Green Park", jubileeLine.Stations[15], piccadillyLine.Stations[7], 2.0, "Eastbound", "Eastbound");
+
+            // Interchange at Westminster between Jubilee and Circle lines
+            AddInterchange("Westminster", jubileeLine.Stations[17], circleLine.Stations[13], 2.0, "Southbound", "Outer");
+
+            // Interchange at Waterloo between Jubilee and Northern lines
+            AddInterchange("Waterloo", jubileeLine.Stations[18], northernLine.Stations[8], 2.0, "Southbound", "Southbound");
+
+            // Interchange at Liverpool Street between Central and Circle lines
+            AddInterchange("Liverpool Street", centralLine.Stations[14], circleLine.Stations[9], 2.0, "Eastbound", "Inner");
+
         }
 
         private void AddStationsAndConnections(Line line, (string, double, string)[] stations)
