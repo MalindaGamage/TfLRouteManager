@@ -14,9 +14,9 @@ namespace TfLRouteManager.Services
         public void PrintClosedTracks()
         {
             bool anyClosed = false;
-            for (int i = 0; i < _network.StationCount; i++)
+            for (int i = 0; i < _network.Stations.Count; i++) 
             {
-                var station = _network.Stations[i];
+                var station = _network.Stations.Get(i); 
                 for (int j = 0; j < station.ConnectionCount; j++)
                 {
                     var connection = station.Connections[j];
@@ -36,9 +36,9 @@ namespace TfLRouteManager.Services
         public void PrintDelayedTracks()
         {
             bool anyDelayed = false;
-            for (int i = 0; i < _network.StationCount; i++)
+            for (int i = 0; i < _network.Stations.Count; i++)
             {
-                var station = _network.Stations[i];
+                var station = _network.Stations.Get(i);
                 for (int j = 0; j < station.ConnectionCount; j++)
                 {
                     var connection = station.Connections[j];

@@ -43,8 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\ConnectionHashTable.cs" />
-    <Compile Include="DataStructures\StationHashTable.cs" />
+    <Compile Include="DataStructures\DynamicArray.cs" />
+    <Compile Include="DataStructures\SimpleHashTable.cs" />
     <Compile Include="Models\Line.cs" />
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Station.cs" />

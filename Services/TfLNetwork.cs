@@ -1,18 +1,17 @@
+using System;
 using TfLRouteManager.Models;
 
 namespace TfLRouteManager.Services
 {
     public class TfLNetwork
     {
-        public Line[] Lines { get; set; } = new Line[10];
-        public int LineCount { get; set; } = 0;
-        public Station[] Stations { get; set; } = new Station[100];
-        public int StationCount { get; set; } = 0;
-        private StationHashTable _stationHashTable;
+        public DynamicArray<Line> Lines { get; set; } = new DynamicArray<Line>();
+        public DynamicArray<Station> Stations { get; set; } = new DynamicArray<Station>();
+        private SimpleHashTable _stationHashTable;
 
         public TfLNetwork()
         {
-            _stationHashTable = new StationHashTable(100);
+            _stationHashTable = new SimpleHashTable(100);
         }
 
         public void InitializeNetwork()
@@ -424,25 +423,25 @@ namespace TfLRouteManager.Services
 
         public void AddStation(Station station)
         {
-            if (StationCount < Stations.Length)
-            {
-                Stations[StationCount++] = station;
-                _stationHashTable.Add(station.Name, station);
-            }
+            Stations.Add(station);
+            _stationHashTable.Add(station.Name.ToLower(), station);
         }
 
         public Station FindStation(string name)
         {
-            return _stationHashTable.Get(name);
+            var station = _stationHashTable.Get(name.ToLower());
+            if (station == null)
+            {
+                Console.WriteLine($"Station '{name}' not found in the network.");
+            }
+            return station;
         }
 
         public void AddLine(Line line)
         {
-            if (LineCount < Lines.Length)
-            {
-                Lines[LineCount++] = line;
-            }
+            Lines.Add(line);
         }
+
         private void AddInterchange(string stationName, Station fromStation, Station toStation, double interchangeTime, string fromDirection, string toDirection)
         {
             var station = FindStation(stationName);

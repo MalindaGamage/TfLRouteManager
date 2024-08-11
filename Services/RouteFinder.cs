@@ -24,15 +24,15 @@ namespace TfLRouteManager.Services
                 return (new string[0], new string[0]);
             }
 
-            var previous = new Station[_network.Stations.Length];
-            var distances = new double[_network.Stations.Length];
-            var visited = new bool[_network.Stations.Length];
-            var stationIndexes = new int[_network.Stations.Length];
+            var previous = new Station[_network.Stations.Count];
+            var distances = new double[_network.Stations.Count];
+            var visited = new bool[_network.Stations.Count];
+            var stationIndexes = new int[_network.Stations.Count];
             int nodeCount = 0;
 
-            for (int i = 0; i < _network.Stations.Length; i++)
+            for (int i = 0; i < _network.Stations.Count; i++)
             {
-                var station = _network.Stations[i];
+                var station = _network.Stations.Get(i);
                 distances[i] = station == from ? 0 : double.PositiveInfinity;
                 stationIndexes[i] = i;
                 nodeCount++;
@@ -41,7 +41,7 @@ namespace TfLRouteManager.Services
             while (nodeCount != 0)
             {
                 int smallestIndex = -1;
-                for (int i = 0; i < _network.Stations.Length; i++)
+                for (int i = 0; i < _network.Stations.Count; i++)
                 {
                     if (!visited[i] && (smallestIndex == -1 || distances[i] < distances[smallestIndex]))
                     {
@@ -54,14 +54,14 @@ namespace TfLRouteManager.Services
                     break;
                 }
 
-                var smallest = _network.Stations[smallestIndex];
+                var smallest = _network.Stations.Get(smallestIndex);
                 visited[smallestIndex] = true;
                 nodeCount--;
 
                 if (smallest == to)
                 {
-                    var path = new string[_network.Stations.Length];
-                    var directions = new string[_network.Stations.Length];
+                    var path = new string[_network.Stations.Count];
+                    var directions = new string[_network.Stations.Count];
                     int pathCount = 0;
 
                     while (previous[smallestIndex] != null)
@@ -76,7 +76,7 @@ namespace TfLRouteManager.Services
                         }
 
                         smallest = previousStation;
-                        smallestIndex = Array.IndexOf(_network.Stations, smallest);
+                        smallestIndex = Array.IndexOf(_network.Stations.ToArray(), smallest);
                         pathCount++;
                     }
 
@@ -98,7 +98,7 @@ namespace TfLRouteManager.Services
                     var neighbor = smallest.Connections[i];
                     if (neighbor.IsClosed) continue;
 
-                    int neighborIndex = Array.IndexOf(_network.Stations, neighbor.To);
+                    int neighborIndex = Array.IndexOf(_network.Stations.ToArray(), neighbor.To);
                     if (neighborIndex < 0 || visited[neighborIndex]) continue;
 
                     var alt = distances[smallestIndex] + neighbor.DelayedTime;
