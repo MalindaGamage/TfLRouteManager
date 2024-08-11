@@ -158,11 +158,7 @@ namespace TfLRouteManager.Services
                 ("Waterloo", 1.43, "Westbound"),
                 ("Westminster", 1.82, "Westbound"),
                 ("Green Park", 1.82, "Westbound"),
-<<<<<<< HEAD
                 ("Bond Street", 2.28, "Westbound"),
-=======
-                                ("Bond Street", 2.28, "Westbound"),
->>>>>>> bd5f9049a79149d3a35d1b7509f52415eddc7834
                 ("Baker Street", 2.85, "Westbound"),
                 ("St Johns Wood", 1.52, "Westbound"),
                 ("Swiss Cottage", 1.18, "Westbound"),
