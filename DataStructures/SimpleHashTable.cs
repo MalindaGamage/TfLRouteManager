@@ -37,7 +37,7 @@ public class SimpleHashTable
 
     public Station Get(string key)
     {
-        int index = GetIndex(key, _buckets.Length);
+        int index = GetIndex(key.ToLower(), _buckets.Length);
 
         // Handle collisions by linear probing
         while (_buckets[index] != null)

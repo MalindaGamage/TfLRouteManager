@@ -21,15 +21,8 @@ namespace TfLRouteManager.Services
                 if (from != null && to != null)
                 {
                     var connection = _network.FindConnection(from, to);
-                    if (connection != null)
-                    {
-                        connection.IsClosed = true;
-                        Console.WriteLine($"Closed track from {fromStation} to {toStation}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"No direct connection found from {fromStation} to {toStation}.");
-                    }
+                    connection.IsClosed = true;
+                    Console.WriteLine($"Closed track from {fromStation} to {toStation}.");
 
                     if (bothDirections)
                     {
